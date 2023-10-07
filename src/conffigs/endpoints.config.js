@@ -15,41 +15,21 @@ const ApiRoutes = {
   },
   Auth: {
     Login: {
-      Endpoint: "/login",
+      Endpoint: "/adminLogin",
       Method: HttpMethod.Post,
     },
   },
-  Product: {
+  User: {
     All: {
-      Endpoint: "/getAllProduct",
+      Endpoint: "/getAllUser",
       Method: HttpMethod.Post,
     },
-    AllProductFrencise: {
-      Endpoint: "/getFranchiseProduct",
+    AllRefferalUser: {
+      Endpoint: "/getRefferalDataById",
       Method: HttpMethod.Post,
     },
-    ProductById: {
-      Endpoint: "/getProductById",
-      Method: HttpMethod.Post,
-    },
-    AddProduct: {
-      Endpoint: "/addProduct",
-      Method: HttpMethod.Post,
-    },
-    addProductVarients: {
-      Endpoint: "/addProductVarients",
-      Method: HttpMethod.Post,
-    },
-    EditProduct: {
-      Endpoint: "/updateProduct",
-      Method: HttpMethod.Post,
-    },
-    EditProductVariant: {
-      Endpoint: "/updateProductVarients",
-      Method: HttpMethod.Post,
-    },
-    DeleteProduct: {
-      Endpoint: "/deleteProduct",
+    UserById: {
+      Endpoint: "/getUserById",
       Method: HttpMethod.Post,
     },
   },

@@ -1,8 +1,9 @@
-import { getTokenLocal } from "../../utils/localStorage.util.js";
-import ApiRoutes from "../../conffigs/endpoints.config";
-import HttpClient from "../index.api";
+import { getTokenLocal } from "../utils/localStorage.util";
+import ApiRoutes from "../conffigs/endpoints.config";
+import HttpClient from "./index.api";
 const baseURL = process.env.REACT_APP_API_URL;
-class Auth extends HttpClient {
+
+class Dashboard extends HttpClient {
   constructor() {
     super(baseURL);
     this._initializeRequestInterceptor();
@@ -28,18 +29,16 @@ class Auth extends HttpClient {
     );
   };
 
-  loginConfig = ApiRoutes.Auth.Login;
+  DashboardConfig = ApiRoutes.Dashboard.Data;
 
-  login = async (reqBody) => {
+  getDashboard = async () => {
     return this.instance({
-      method: this.loginConfig.Method,
-      url: this.loginConfig.Endpoint,
+      method: this.DashboardConfig.Method,
+      url: this.DashboardConfig.Endpoint,
       headers: {},
-      data: reqBody,
+      data: null,
     });
   };
-
- 
 }
 
-export default Auth;
+export default Dashboard;

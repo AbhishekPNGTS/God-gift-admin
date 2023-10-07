@@ -27,9 +27,16 @@ import AnimateButton from "ui-component/extended/AnimateButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 // ============================|| FIREBASE - LOGIN ||============================ //
-
+import AuthApi from "../../../../apis/auth-api/auth.api";
+import { useDispatch } from "react-redux";
+import {
+  updateUser,
+  updateToken,
+} from "../../../../redux/redux-slice/staff.slice";
 const FirebaseLogin = ({ ...others }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authApi = new AuthApi();
   if (!localStorage.getItem("token") == "") {
     window.location.href = "/dashboard";
   } else if (localStorage.getItem("token") == "") {
@@ -65,55 +72,21 @@ const FirebaseLogin = ({ ...others }) => {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             if (scriptedRef.current) {
-              var myHeaders = new Headers();
-              myHeaders.append("authkey", process.env.REACT_APP_AUTH_KEY);
-              myHeaders.append("Content-Type", "application/json");
-              var raw = JSON.stringify({
+              const loginResponse = await authApi.login({
                 email: values.email,
-                password: values.password,
+                password: values.password
               });
-              var requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw,
-                redirect: "follow",
-              };
-              fetch(`${process.env.REACT_APP_API_URL}login`, requestOptions)
-                .then((response) => response.json())
-                .then((result) => {
-                  if (result.code == 200) {
-                    localStorage.setItem("token", result.data.token);
-                    localStorage.setItem("userId", result.data.userId);
-                    toast.success("Login Successfully", {
-                      position: toast.POSITION.TOP_CENTER,
-                      autoClose: 5000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                    });
-                    navigate("/dashboard");
-                  } else if (result.status == "notFound") {
-                    toast.error("User not found", {
-                      position: toast.POSITION.TOP_CENTER,
-                      autoClose: 5000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                    });
-                  } else {
-                    toast.error(result.message, {
-                      position: toast.POSITION.TOP_CENTER,
-                      autoClose: 5000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                    });
-                  }
-                })
-                .catch((error) => console.log("error", error));
+              console.log(loginResponse);
+              if (loginResponse && loginResponse?.data?.code === 200) {
+                dispatch(updateToken(loginResponse.data.data.token));
+                dispatch(updateUser(JSON.stringify(loginResponse.data.data.userId)));
+                toast.success(`Login successsfully`);
+                window.location.replace("/dashboard", { replace: true });
+              } else if((loginResponse?.data?.code === 201) && (loginResponse?.data?.status ===  "incorrectPassword")){
+                return toast.error(`${loginResponse?.data?.message}`);
+              }else{
+                return toast.error(`Something went wrong !`);
+              }
               setStatus({ success: true });
               setSubmitting(false);
             }

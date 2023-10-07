@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import isAuth from "../../../../apis/auth-api/auth.api.js";
+
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -75,39 +77,39 @@ const ProfileSection = () => {
     const [name , setName] = useState('');
     const [email , setEmail] = useState('');
 
-    function staffDetail() {
-        var myHeaders = new Headers();
-        myHeaders.append("authkey", process.env.REACT_APP_AUTH_KEY);
-        myHeaders.append("token", localStorage.getItem("token"));
-        myHeaders.append("Content-Type", "application/json");
+    // function staffDetail() {
+    //     var myHeaders = new Headers();
+    //     myHeaders.append("authkey", process.env.REACT_APP_AUTH_KEY);
+    //     myHeaders.append("token", localStorage.getItem("token"));
+    //     myHeaders.append("Content-Type", "application/json");
     
-        var raw = JSON.stringify({
-          adminId: localStorage.getItem("userId"),
-        });
+    //     var raw = JSON.stringify({
+    //       adminId: localStorage.getItem("userId"),
+    //     });
     
-        var requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow",
-        };
+    //     var requestOptions = {
+    //       method: "POST",
+    //       headers: myHeaders,
+    //       body: raw,
+    //       redirect: "follow",
+    //     };
     
-        fetch(`${process.env.REACT_APP_API_URL}staffDetail`, requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            if (result.code == 200) {
-              setName(result.data.UserName);
-              setEmail(result.data.Email);
-            }else if(result.code == 201 &&result.status == 'accessDenied'){
-                localStorage.clear()
-                navigate('/')
-            }
-          })
-          .catch((error) => {});
-      }
-      useEffect(() => {
-        staffDetail();
-      }, []);
+    //     fetch(`${process.env.REACT_APP_API_URL}staffDetail`, requestOptions)
+    //       .then((response) => response.json())
+    //       .then((result) => {
+    //         if (result.code == 200) {
+    //           setName(result.data.UserName);
+    //           setEmail(result.data.Email);
+    //         }else if(result.code == 201 &&result.status == 'accessDenied'){
+    //             localStorage.clear()
+    //             navigate('/')
+    //         }
+    //       })
+    //       .catch((error) => {});
+    //   }
+    //   useEffect(() => {
+    //     staffDetail();
+    //   }, []);
 
     return (
         <>
